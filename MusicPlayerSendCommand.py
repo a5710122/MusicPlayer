@@ -4,6 +4,8 @@ import serial
 import time
 import glob, os
 
+ser = serial.Serial('COM4', 9600)
+
 list_song = []
 realnames = []
 index_song = 0
@@ -17,7 +19,7 @@ for file in os.listdir("C:/Users/Smith/Desktop/Work_pipe/python_to_arduino/Song/
         list_song.append(os.path.join("C:/Users/Smith/Desktop/Work_pipe/python_to_arduino/Song/", file))
         count = count + 1
 
-mixer.init(index_song)
+# mixer.init(index_song)
 
 
 def play():
@@ -27,18 +29,22 @@ def play():
 
     if (play_stop == False):
 
-        mixer.music.load(list_song[index_song])
-        mixer.music.play()
+        # mixer.music.load(list_song[index_song])
+        # mixer.music.play()
 
         app.setLabel("l2", realnames[index_song])
         play_stop = True
 
+        time.sleep(0.1)
+        ser.write(b'P')
 
     elif (play_stop == True):
         print("Stop...")
 
-        mixer.music.stop()
+        # mixer.music.stop()
 
+        time.sleep(0.1)
+        ser.write(b'S')
         play_stop = False
 
 
@@ -52,11 +58,13 @@ def next():
     else:
         index_song = 0;
 
-    mixer.music.load(list_song[index_song])
-    mixer.music.play()
+    # mixer.music.load(list_song[index_song])
+    # mixer.music.play()
 
     app.setLabel("l2", realnames[index_song])
 
+    time.sleep(0.1)
+    ser.write(b'N')
 
 def back():
     global index_song
@@ -68,11 +76,12 @@ def back():
     else:
         index_song = len(list_song) - 1
 
-    mixer.music.load(list_song[index_song])
-    mixer.music.play()
+    # mixer.music.load(list_song[index_song])
+    # mixer.music.play()
 
     app.setLabel("l2", realnames[index_song])
-
+    time.sleep(0.1)
+    ser.write(b'b')
 
 with gui("Music Player", "700x200", bg='orange', font={'size':18}) as app:
     app.label("Welcome to MusicPlayer", bg='blue', fg='orange')
